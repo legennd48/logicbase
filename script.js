@@ -46,16 +46,27 @@ const observer = new IntersectionObserver(
 
 document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
-// Contact form placeholder handler
-// NOTE: On GitHub Pages there is no backend. When you add a backend or a form provider,
-// replace this with a real POST request.
+// Contact form mailto handler for the static GitHub Pages site.
 const form = document.getElementById('contact-form');
 if (form) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const data = new FormData(form);
     const name = data.get('name');
-    alert(`Thanks, ${name}! We will reply within one business day.`);
-    form.reset();
+    const email = data.get('email');
+    const intent = data.get('intent');
+    const message = data.get('message');
+    const subject = `Logicbase enquiry: ${intent === 'learning' ? 'Learning & Education' : intent === 'software' ? 'Software Development' : 'Learning and Software'}`;
+    const body = [
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Interest: ${intent}`,
+      '',
+      'Message:',
+      message
+    ].join('\n');
+    const mailto = `mailto:admin@baselogic.dev?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailto;
   });
 }
